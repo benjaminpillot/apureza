@@ -12,3 +12,11 @@ __email__ = 'benjaminpillot@riseup.net'
 
 class KerasMlpError(Exception):
     pass
+
+
+class DataError(Exception):
+    pass
+
+
+class DataWarning(Warning):
+    pass
