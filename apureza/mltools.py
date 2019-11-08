@@ -32,6 +32,26 @@ def return_new_instance(method):
     return _return_new_instance
 
 
+def pearson(x, y):
+    """ Compute pearson correlation coefficient
+
+    :param x: numpy array
+    :param y: numpy array
+    :return:
+    """
+    try:
+        cc, p_value = pearsonr(x, y)
+    except TypeError:
+        try:
+            cc, p_value = pearsonr(x.flatten(), y.flatten())
+        except ValueError:
+            raise DataError("Input must have the same length")
+    except Exception as e:
+        raise DataError("Unknown error:\n '%s'" % e)
+
+    return cc, p_value
+
+
 class Data:
 
     _normalizer = None
@@ -72,6 +92,13 @@ class Data:
 
         return scale_data
 
+    @return_new_instance
+    def __getitem__(self, item):
+        return self._data.__getitem__(item)
+
+    def __len__(self):
+        return len(self._data)
+
     def __repr__(self):
         return repr(self._data)
 
@@ -103,26 +130,6 @@ class Data:
         :return:
         """
         return self._inv_scale("normalizer")
-
-    def pearson(self, other):
-        """ Compute pearson correlation coefficient
-
-        :param other: Data instance or numpy array
-        :return:
-        """
-        try:
-            cc, p_value = pearsonr(self._data, other._data)
-        except TypeError:
-            try:
-                cc, p_value = pearsonr(self._data.flatten(), other._data.flatten())
-            except ValueError:
-                raise DataError("Input must have the same length")
-        except AttributeError:
-            cc, p_value = self.pearson(self.__class__(other))
-        except Exception as e:
-            raise DataError("Unknown error:\n '%s'" % e)
-
-        return cc, p_value
 
     def standardize(self):
         """ Standardize data
@@ -208,6 +215,7 @@ class KerasMlp(NeuralNetwork):
     """ Keras-based multilayer perceptron
 
     """
+    dataset = dict(test=None, train=None, valid=None)
 
     def __init__(self):
 
@@ -293,17 +301,17 @@ class KerasMlp(NeuralNetwork):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    rgb = Data.from_csv("/home/benjamin/Documents/apureza/data/rg_meanpan_ndvi_ib.csv").normalize(-1, 1)
-    density = Data.from_csv("/home/benjamin/Documents/apureza/data/density.csv").normalize()
+    rgb = Data.from_csv("/home/ird/Documents/apureza/data/rg_meanpan_ndvi_ib.csv").normalize(-1, 1)
+    density = Data.from_csv("/home/ird/Documents/apureza/data/density.csv").normalize()
     ann = KerasMlp().build(nb_inputs=5, nb_outputs=1, nb_hidden_layer=3, nb_hidden_units=(64, 32, 64),
                            hidden_activation=('sigmoid', 'sigmoid', 'sigmoid'), output_activation='linear').train(
-        rgb.values, density.values, batch_size=64, validation_split=0.3, epochs=140, early_stopping=False,
+        rgb.values, density.values, batch_size=64, validation_split=0.6, epochs=300, early_stopping=False,
         optimizer="rmsprop", loss_function='mean_squared_error', metrics=['accuracy'])
-    estimated_density = Data(ann.predict(rgb.values))
-    measured_density = density
-    print("corr coeff = %.2f (p-value = %f)" % estimated_density.pearson(measured_density))
+    estimated_density = ann.predict(rgb.values)
+    measured_density = density.values
+    print("corr coeff = %.2f (p-value = %f)" % pearson(measured_density, estimated_density))
     plt.figure(1)
-    plt.imshow(estimated_density.values.reshape(88, 125))
+    plt.imshow(estimated_density.reshape(88, 125))
     plt.figure(2)
-    plt.imshow(measured_density.values.reshape(88, 125))
+    plt.imshow(measured_density.reshape(88, 125))
     plt.show()
