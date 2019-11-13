@@ -297,21 +297,3 @@ class KerasMlp(NeuralNetwork):
         :return:
         """
         return self.model.predict(input_data)
-
-
-if __name__ == "__main__":
-    from matplotlib import pyplot as plt
-    rgb = Data.from_csv("/home/ird/Documents/apureza/data/rg_meanpan_ndvi_ib.csv").normalize(-1, 1)
-    density = Data.from_csv("/home/ird/Documents/apureza/data/density.csv").normalize()
-    ann = KerasMlp().build(nb_inputs=5, nb_outputs=1, nb_hidden_layer=3, nb_hidden_units=(64, 32, 64),
-                           hidden_activation=('sigmoid', 'sigmoid', 'sigmoid'), output_activation='linear').train(
-        rgb.values, density.values, batch_size=64, validation_split=0.6, epochs=300, early_stopping=False,
-        optimizer="rmsprop", loss_function='mean_squared_error', metrics=['accuracy'])
-    estimated_density = ann.predict(rgb.values)
-    measured_density = density.values
-    print("corr coeff = %.2f (p-value = %f)" % pearson(measured_density, estimated_density))
-    plt.figure(1)
-    plt.imshow(estimated_density.reshape(88, 125))
-    plt.figure(2)
-    plt.imshow(measured_density.reshape(88, 125))
-    plt.show()
