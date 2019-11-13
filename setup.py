@@ -2,9 +2,13 @@
 
 """ Module summary description.
 
-More detailed description.
+Setup installation for apureza package.
+
+N.B.:
+We may use "parse_requirements" function (from pip._internal.req)
+to build the "install_requires" key of setup dict from the file
+"requirements.txt" but I'm not sure it's a good practice.
 """
-from pip._internal.req import parse_requirements
 from setuptools import setup, find_packages
 
 import apureza
@@ -25,7 +29,11 @@ setup(name='gis_tools',
       url='http://github.com/benjaminpillot/apureza',
       author='Benjamin Pillot',
       author_email='benjaminpillot@riseup.net',
-      install_requires=parse_requirements("requirements.txt", session='hack'),
+      install_requires=['numpy>=1.17.2',
+                        'Keras>=2.3.1',
+                        'scipy>=1.1.0',
+                        'matplotlib>=3.0.3',
+                        'scikit_learn>=0.21.3'],
       python_requires='>=3',
       license='GNU GPL v3.0',
       packages=find_packages(),
