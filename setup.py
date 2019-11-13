@@ -21,6 +21,9 @@ __email__ = 'benjaminpillot@riseup.net'
 with open("README.md", 'r') as fh:
     long_description = fh.read()
 
+with open("requirements.txt") as req:
+    install_req = req.read().splitlines()
+
 setup(name='apureza',
       version=apureza.__version__,
       description='Apureza project API',
@@ -29,10 +32,7 @@ setup(name='apureza',
       url='http://github.com/benjaminpillot/apureza',
       author='Benjamin Pillot',
       author_email='benjaminpillot@riseup.net',
-      install_requires=['numpy>=1.17.2',
-                        'Keras>=2.3.1',
-                        'scipy>=1.1.0',
-                        'scikit_learn>=0.21.3'],
+      install_requires=install_req,
       python_requires='>=3',
       license='GNU GPL v3.0',
       packages=find_packages(),
