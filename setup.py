@@ -21,7 +21,7 @@ __email__ = 'benjaminpillot@riseup.net'
 with open("README.md", 'r') as fh:
     long_description = fh.read()
 
-setup(name='gis_tools',
+setup(name='apureza',
       version=apureza.__version__,
       description='Apureza project API',
       long_description=long_description,
