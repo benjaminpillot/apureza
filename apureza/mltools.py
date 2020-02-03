@@ -301,9 +301,12 @@ class KerasMlp(NeuralNetwork):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    rgb = Data.from_csv("/home/ird/Documents/apureza/data/rg_meanpan_ndvi_ib.csv").normalize(-1, 1)
+    rgb = Data.from_csv("/home/ird/Desktop/Apureza project/FOTO/FOTO "
+                        "code/window_size=40/rgb.csv").normalize(-1, 1)
+    # rgb = Data.from_csv("/home/ird/Desktop/Apureza project/FOTO/FOTO "
+    #                     "code/window_size=40/rgb_mean_intensity_is_centered_and_psd_is_normalized_by_variance.tif")
     density = Data.from_csv("/home/ird/Documents/apureza/data/density.csv").normalize()
-    ann = KerasMlp().build(nb_inputs=5, nb_outputs=1, nb_hidden_layer=3, nb_hidden_units=(64, 32, 64),
+    ann = KerasMlp().build(nb_inputs=3, nb_outputs=1, nb_hidden_layer=3, nb_hidden_units=(64, 32, 64),
                            hidden_activation=('sigmoid', 'sigmoid', 'sigmoid'), output_activation='linear').train(
         rgb.values, density.values, batch_size=64, validation_split=0.6, epochs=300, early_stopping=False,
         optimizer="rmsprop", loss_function='mean_squared_error', metrics=['accuracy'])
