@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##########IMPORT##########
 
 import pandas as pd
@@ -33,7 +34,7 @@ Dengue = gpd.GeoDataFrame(Dengue,geometry="geometry")
 
 Dengue.to_file("Dengue.shp")
 
-##########Cas non placés##########
+##########Cas non placï¿½s##########
 PosUndone=AMerger.copy()
 PosUndone=PosUndone.set_index("index")
 PosUndone=PosUndone.drop(DengueDissolve["index"])

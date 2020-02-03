@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##########IMPORT##########
 
 import pandas as pd
