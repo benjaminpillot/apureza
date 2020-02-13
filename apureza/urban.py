@@ -11,10 +11,19 @@ __email__ = 'benjaminpillot@riseup.net'
 
 from fototex.foto import Foto
 from utils.sys.timer import Timer
-
-test = Foto("/home/benjamin/Desktop/APUREZA/FOTO/SUBSET_PLEIADES_20160915_Pan.tif", method="block")
-for w_size in [7, 11, 15, 19, 21, 25, 29, 35]:
+from matplotlib import pyplot as plt
+# test2 = Foto("/home/benjamin/Desktop/APUREZA/FOTO/Images/SUBSET_PLEIADES_20160915_Pan.tif", method="moving")
+# test2 = Foto("//home/benjamin/Desktop/APUREZA/FOTO/Images/IMG_SPOT7_PMS_2018.TIF", band=4, method="moving",
+#              in_memory=False)
+test2 = Foto("/home/benjamin/Desktop/APUREZA/FOTO/Images/IMG_SPOT6_PMS_2013.TIF", band=4, method="moving",
+             in_memory=False)
+for w_size in [13]:
     with Timer() as t:
-        test.run(w_size, progress_bar=True, sklearn_pca=True)
+        test2.run(w_size, progress_bar=True, sklearn_pca=True)
     print("spent time (%d): %s" % (w_size, t))
-    # test.save_rgb(f"/home/benjamin/Desktop/APUREZA/FOTO/rgb_moving_{w_size}.tif")
+    test2.save_rgb(progress_bar=True)
+    # test2.save_rgb(f"/home/benjamin/Desktop/APUREZA/FOTO/rgb/rgb_spot_moving_{w_size}.tif", progress_bar=True)
+# test2.fit_transform(test, progress_bar=True)
+# plt.pcolor(test2.rgb[:, :, 0])
+# plt.imshow(test2.rgb)
+# plt.show()
